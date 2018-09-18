@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <EditText
+        android:id="@+id/et_school_url"
+        android:layout_width="271dp"
+        android:layout_height="47dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="114dp"
+        android:ems="10"
+        android:hint="school.cutebrains.com"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/et_user_id"
+        android:layout_width="271dp"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="175dp"
+        android:ems="10"
+        android:hint="User_id"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="271dp"
+        android:layout_height="46dp"
+        android:layout_centerInParent="true"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:password="true" />
+
+    <Button
+        android:id="@+id/b_login"
+        android:layout_width="270dp"
+        android:layout_height="51dp"
+        android:layout_above="@+id/cb_remember_me"
+        android:layout_centerHorizontal="true"
+        android:text="Log In" />
+
+    <CheckBox
+        android:id="@+id/cb_remember_me"
+        android:layout_width="146dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/et_user_id"
+        android:layout_marginBottom="125dp"
+        android:text="Remember me" />
+
+</RelativeLayout>
