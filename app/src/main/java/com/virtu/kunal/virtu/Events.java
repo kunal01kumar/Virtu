@@ -1,4 +1,4 @@
 package com.virtu.kunal.virtu;
 
-public class Teacher {
+public class Events {
 }

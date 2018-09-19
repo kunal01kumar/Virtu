@@ -1,20 +1,22 @@
 package com.virtu.kunal.virtu;
 
-public class Parent {
+import java.util.Arrays;
+
+public class Employee {
     private String username;
     private String firstname;
     private String lastname;
     private String email;
     private String user_type;
-    private String[] wards;
+    private String[] privilages;
 
-    public Parent(String username, String firstname, String lastname, String email, String user_type, String[] wards) {
+    public Employee(String username, String firstname, String lastname, String email, String user_type, String[] privilages) {
         this.username = username;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.user_type = user_type;
-        this.wards = wards;
+        this.privilages = privilages;
     }
 
     public String getUsername() {
@@ -37,7 +39,12 @@ public class Parent {
         return user_type;
     }
 
-    public String[] getWards() {
-        return wards;
+    public String[] getPrivilages() {
+        return privilages;
+    }
+
+    public boolean hasPivilage(String privilage){
+        if(Arrays.asList(privilages).contains(privilage)) return true;
+        return false;
     }
 }

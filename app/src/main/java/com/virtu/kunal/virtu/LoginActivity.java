@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText ed_password;
     private Button b_login;
     private CheckBox cb_remember_me;
-
+    public User_info user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+
     }
 
     private void attemptLogin() {
@@ -57,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         final String password = ed_password.getText().toString();
         final String username = ed_user_id.getText().toString();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        //String URL = "http://" + school + ".cutebrains.com/oauth/token";
-        String URL = "http://schools.cutebrains.com/oauth/token";
+        String URL = "http://" + school + ".cutebrains.com/oauth/token";
+        //String URL = "http://schools.cutebrains.com/oauth/token";
 
 
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -83,10 +84,24 @@ public class LoginActivity extends AppCompatActivity {
                         email = (String) user_info.get("email");
                         username = (String) user_info.get("username");
                         fullname = (String) user_info.get("full_name");
-                        if(type.equals("Parent")) get_ward(username,access_token);
 
                         //System.out.println(access_token+" "+type+" "+email +" "+ username+" "+fullname+" "+refresh_token);
-                        User_info user = new User_info(access_token, type, email, username, fullname, refresh_token);
+                        user = new User_info(access_token, type, email, username, fullname, refresh_token);
+
+                        switch (type) {
+                            case "Employee":
+                                get_employee_data(username,access_token);
+                                break;
+                            case "Parent":
+                                get_parent_data(username,access_token);
+
+                                break;
+                            case "Student":
+                                get_student_data(username,access_token);
+
+                                break;
+                            default:
+                        }
 
 
                     } else {
@@ -112,12 +127,12 @@ public class LoginActivity extends AppCompatActivity {
                 MyData.put("client_id", "0519f18a7a36842285ce40b2d4b3d8ae18749ee9387c6bea1920589da1eefae8");
                 MyData.put("client_secret", "b0846581a7b622559c1012d04ae4ed6c0828fdf3b9c839fe9d05093ce1f41ee9");
                 MyData.put("grant_type", "password");
-//                MyData.put("username", username);
-//                MyData.put("password", password);
-//                MyData.put("redirect_uri", "http://" + school + ".cutebrains.com");
-                MyData.put("username", "p1005");
-                MyData.put("password", "parent123");
-                MyData.put("redirect_uri", "http://schools.cutebrains.com");
+                MyData.put("username", username);
+                MyData.put("password", password);
+                MyData.put("redirect_uri", "http://" + school + ".cutebrains.com");
+//                MyData.put("username", "T010");
+//                MyData.put("password", "teacher123");
+//                MyData.put("redirect_uri", "http://schools.cutebrains.com");
 
                 return MyData;
             }
@@ -126,30 +141,27 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue.add(MyStringRequest);
     }
 
-    private void get_ward(String username, final String access_token) {
-
-        //String[] wards = new String[];
+    private void get_student_data(String username, final String access_token) {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String URL = "http://schools.cutebrains.com/api/users/"+username;
-        System.out.println("Token token=\""+access_token+'"');
+        String URL = "http://schools.cutebrains.com/api/users/" + username;
+        System.out.println("Token token=\"" + access_token + '"');
         StringRequest MyStringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("Volley:",response);
-                    }
-                },
+            @Override
+            public void onResponse(String response) {
+                Log.i("Volley:", response);
+            }
+        },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("Volley:",error.toString());
+                        Log.i("Volley:", error.toString());
                     }
-                })
-        {
+                }) {
             @Override
             public Map getHeaders() throws AuthFailureError {
                 HashMap headers = new HashMap();
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
-                headers.put("Authorization", "Token token=\""+access_token+'"');
+                headers.put("Authorization", "Token token=\"" + access_token + '"');
                 return headers;
             }
         };
@@ -157,4 +169,63 @@ public class LoginActivity extends AppCompatActivity {
         requestQueue.add(MyStringRequest);
 
     }
+
+    private void get_parent_data(String username, final String access_token) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://schools.cutebrains.com/api/users/" + username;
+        System.out.println("Token token=\"" + access_token + '"');
+        StringRequest MyStringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Volley:", response);
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Volley:", error.toString());
+                    }
+                }) {
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                headers.put("Authorization", "Token token=\"" + access_token + '"');
+                return headers;
+            }
+        };
+
+        requestQueue.add(MyStringRequest);
+
+    }
+
+    private void get_employee_data(String username, final String access_token) {
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://schools.cutebrains.com/api/users/" + username;
+        System.out.println("Token token=\"" + access_token + '"');
+        StringRequest MyStringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Volley:", response);
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Volley:", error.toString());
+                    }
+                }) {
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                headers.put("Authorization", "Token token=\"" + access_token + '"');
+                return headers;
+            }
+        };
+
+        requestQueue.add(MyStringRequest);
+
+    }
+
 }
