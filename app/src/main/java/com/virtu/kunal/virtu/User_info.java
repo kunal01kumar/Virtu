@@ -15,6 +15,7 @@ public class User_info {
         this.refresh_token = refresh_token;
         this.type =type;
         this.username = username;
+
     }
 
     public String getAccess_token() {

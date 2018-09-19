@@ -52,16 +52,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptLogin() {
-//
-//        http://kunal.cutebrains.com/oauth/token?client_id=8cbea8ae5e3ea90e2ea7756e02474c478c6cee7d7c47318ec9a99d2fe1acb0a3&
-//        // client_secret=c105dda46adf80abc8e0195418f869faac755aa20207aeaccaa38535ae5e0e63&grant_type=password&username=admin&password=admin123&redirect_uri=http://kunal.cutebrains.com
 
         final String school = ed_school_url.getText().toString();
         final String password = ed_password.getText().toString();
         final String username = ed_user_id.getText().toString();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //String URL = "http://" + school + ".cutebrains.com/oauth/token";
-        String URL = "http://kunal.cutebrains.com/oauth/token";
+        String URL = "http://schools.cutebrains.com/oauth/token";
 
 
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
@@ -70,22 +67,31 @@ public class LoginActivity extends AppCompatActivity {
                 Log.i("Volley", response);
                 try {
                     JSONObject packet = new JSONObject(response);
-                    JSONObject user_info = packet.getJSONObject("user_info");
-                    String access_token;
-                    String type;
-                    String email;
-                    String username;
-                    String fullname;
-                    String refresh_token;
-                    access_token = (String) packet.get("access_token");
-                    refresh_token = (String) packet.get("refresh_token");
-                    type = (String) user_info.get("type");
-                    email = (String) user_info.get("email");
-                    username = (String) user_info.get("username");
-                    fullname = (String) user_info.get("full_name");
+                    //System.out.println(packet.length());
+                    if (packet.length() == 4) {
 
-                    //System.out.println(access_token+" "+type+" "+email +" "+ username+" "+fullname+" "+refresh_token);
-                    User_info user = new User_info(access_token, type, email, username, fullname, refresh_token);
+                        JSONObject user_info = packet.getJSONObject("user_info");
+                        String access_token;
+                        String type;
+                        String email;
+                        String username;
+                        String fullname;
+                        String refresh_token;
+                        access_token = (String) packet.get("access_token");
+                        refresh_token = (String) packet.get("refresh_token");
+                        type = (String) user_info.get("type");
+                        email = (String) user_info.get("email");
+                        username = (String) user_info.get("username");
+                        fullname = (String) user_info.get("full_name");
+                        if(type.equals("Parent")) get_ward(username,access_token);
+
+                        //System.out.println(access_token+" "+type+" "+email +" "+ username+" "+fullname+" "+refresh_token);
+                        User_info user = new User_info(access_token, type, email, username, fullname, refresh_token);
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Invalid Credentials", Toast.LENGTH_LONG).show();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -103,20 +109,52 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> MyData = new HashMap<String, String>();
-                MyData.put("client_id", "8cbea8ae5e3ea90e2ea7756e02474c478c6cee7d7c47318ec9a99d2fe1acb0a3");
-                MyData.put("client_secret", "c105dda46adf80abc8e0195418f869faac755aa20207aeaccaa38535ae5e0e63");
+                MyData.put("client_id", "0519f18a7a36842285ce40b2d4b3d8ae18749ee9387c6bea1920589da1eefae8");
+                MyData.put("client_secret", "b0846581a7b622559c1012d04ae4ed6c0828fdf3b9c839fe9d05093ce1f41ee9");
                 MyData.put("grant_type", "password");
 //                MyData.put("username", username);
 //                MyData.put("password", password);
 //                MyData.put("redirect_uri", "http://" + school + ".cutebrains.com");
-                MyData.put("username", "admin");
-                MyData.put("password", "admin123");
-                MyData.put("redirect_uri", "http://kunal.cutebrains.com");
+                MyData.put("username", "p1005");
+                MyData.put("password", "parent123");
+                MyData.put("redirect_uri", "http://schools.cutebrains.com");
 
                 return MyData;
             }
         };
 
         requestQueue.add(MyStringRequest);
+    }
+
+    private void get_ward(String username, final String access_token) {
+
+        //String[] wards = new String[];
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        String URL = "http://schools.cutebrains.com/api/users/"+username;
+        System.out.println("Token token=\""+access_token+'"');
+        StringRequest MyStringRequest = new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("Volley:",response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("Volley:",error.toString());
+                    }
+                })
+        {
+            @Override
+            public Map getHeaders() throws AuthFailureError {
+                HashMap headers = new HashMap();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                headers.put("Authorization", "Token token=\""+access_token+'"');
+                return headers;
+            }
+        };
+
+        requestQueue.add(MyStringRequest);
+
     }
 }
